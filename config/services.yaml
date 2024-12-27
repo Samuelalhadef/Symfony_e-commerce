@@ -1,0 +1,20 @@
+parameters:
+  locale: "fr"
+  app.locales: ["fr", "en", "ru"]
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\:
+    resource: "../src/"
+    exclude:
+      - "../src/DependencyInjection/"
+      - "../src/Entity/"
+      - "../src/Kernel.php"
+
+  App\EventSubscriber\LocaleSubscriber:
+    arguments:
+      $defaultLocale: "%locale%"

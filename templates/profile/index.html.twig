@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    {# Section Informations Personnelles #}
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+        <div class="px-4 py-5 sm:px-6">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900">Mes informations personnelles</h2>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Détails du compte et informations personnelles.</p>
+        </div>
+        <div class="border-t border-gray-200">
+            <dl>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Nom complet</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {{ user.firstName }} {{ user.lastName }}
+                    </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Email</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.email }}</dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Type de compte</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {% if 'ROLE_ADMIN' in user.roles %}
+                            Administrateur
+                        {% else %}
+                            Client
+                        {% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    {# Section Historique des Commandes #}
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900">Historique des commandes</h2>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Liste de toutes vos commandes passées.</p>
+        </div>
+        <div class="border-t border-gray-200">
+            {% if purchasedCarts is empty %}
+                <div class="px-4 py-5 text-center text-gray-500">
+                    Vous n'avez pas encore effectué de commande.
+                </div>
+            {% else %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    N° Commande
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Date
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Articles
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Détails
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for cart in purchasedCarts %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        #{{ cart.id }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ cart.purchaseDate|date('d/m/Y à H:i') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ cart.cartItems|length }} article(s)
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {% set total = 0 %}
+                                        {% for item in cart.cartItems %}
+                                            {% set total = total + (item.product.price * item.quantity) %}
+                                        {% endfor %}
+                                        {{ total|number_format(2, ',', ' ') }} €
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button onclick="toggleOrderDetails('order-{{ cart.id }}')"
+                                                class="text-blue-600 hover:text-blue-900">
+                                            Voir détails
+                                        </button>
+                                    </td>
+                                </tr>
+                                {# Détails de la commande (cachés par défaut) #}
+                                <tr id="order-{{ cart.id }}" class="hidden bg-gray-50">
+                                    <td colspan="5" class="px-6 py-4">
+                                        <div class="space-y-4">
+                                            {% for item in cart.cartItems %}
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <span class="font-medium">{{ item.product.name }}</span>
+                                                        <span class="text-gray-500 ml-2">
+                                                            {{ item.quantity }} × {{ item.product.price|number_format(2, ',', ' ') }} €
+                                                        </span>
+                                                    </div>
+                                                    <span class="font-medium">
+                                                        {{ (item.quantity * item.product.price)|number_format(2, ',', ' ') }} €
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{# JavaScript pour gérer l'affichage/masquage des détails des commandes #}
+<script>
+function toggleOrderDetails(orderId) {
+    const orderDetails = document.getElementById(orderId);
+    if (orderDetails.classList.contains('hidden')) {
+        orderDetails.classList.remove('hidden');
+    } else {
+        orderDetails.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

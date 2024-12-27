@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Connexion'|trans }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100 flex flex-col justify-center py-12">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h1 class="text-center text-3xl font-extrabold text-gray-900">{{ 'Connexion'|trans }}</h1>
+        <p class="mt-2 text-center text-sm text-gray-600">
+            {{ 'Ou'|trans }} 
+            <a href="{{ path('app_register', {'_locale': app.request.locale}) }}" class="font-medium text-blue-600 hover:text-blue-500">
+                {{ 'créez un nouveau compte'|trans }}
+            </a>
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            {# Important : ne pas oublier la méthode POST et l'action correcte #}
+            <form method="post" action="{{ path('app_login', {'_locale': app.request.locale}) }}" class="space-y-6">
+                {% if error %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">{{ 'Email'|trans }}</label>
+                    <div class="mt-1">
+                        {# Important : changement de name="email" à name="_username" #}
+                        <input type="email" 
+                               value="{{ last_username }}" 
+                               name="email" 
+                               id="email" 
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                               required 
+                               autocomplete="email">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">{{ 'Mot de passe'|trans }}</label>
+                    <div class="mt-1">
+                        {# Important : changement de name="password" à name="_password" #}
+                        <input type="password" 
+                               name="password" 
+                               id="password" 
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                               required 
+                               autocomplete="current-password">
+                    </div>
+                </div>
+
+                {# Important : ajout du jeton CSRF #}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" 
+                               name="_remember_me" 
+                               id="remember_me" 
+                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember_me" class="ml-2 block text-sm text-gray-900">
+                            {{ 'Se souvenir de moi'|trans }}
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {{ 'Se connecter'|trans }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

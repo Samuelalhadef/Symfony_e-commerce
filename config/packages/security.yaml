@@ -1,0 +1,47 @@
+security:
+  # Configuration du hachage des mots de passe
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
+  # Configuration des fournisseurs d'utilisateurs
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+
+  # Configuration des firewalls (zones sécurisées)
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+      provider: app_user_provider
+      form_login:
+        login_path: app_login
+        check_path: app_login
+        enable_csrf: true
+        username_parameter: email
+        password_parameter: password
+      logout:
+        path: app_logout
+        target: app_home
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 604800 # Une semaine en secondes
+
+  # Configuration des règles d'accès
+  access_control:
+    # Routes publiques (accessibles sans connexion)
+    - { path: "^/[a-z]{2}/login$", roles: [PUBLIC_ACCESS] }
+    - { path: "^/[a-z]{2}/register$", roles: [PUBLIC_ACCESS] }
+    # Routes protégées
+    - { path: "^/[a-z]{2}/admin", roles: [ROLE_ADMIN] }
+    - { path: "^/[a-z]{2}/profile", roles: [ROLE_USER] }
+    - { path: "^/[a-z]{2}/cart", roles: [ROLE_USER] }
+
+  # Configuration de la hiérarchie des rôles (placée à l'intérieur de security)
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

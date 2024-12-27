@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ product.name }}{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        {# Fil d'Ariane pour une meilleure navigation #}
+        <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="{{ path('app_home') }}" class="hover:text-gray-700">Accueil</a></li>
+                <li>/</li>
+                <li><a href="{{ path('app_product_show', {'id': product.id}) }}" class="hover:text-gray-700">{{ product.name }}</a></li>
+                <li>/</li>
+                <li class="text-gray-700">Modifier</li>
+            </ol>
+        </nav>
+
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Modifier {{ product.name }}</h1>
+
+        {# Formulaire d'édition #}
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {# Nom du produit #}
+                <div class="col-span-2">
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.name, {'attr': {
+                        'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                    }}) }}
+                    {{ form_errors(form.name, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                {# Prix et Stock sur la même ligne en desktop #}
+                <div>
+                    {{ form_label(form.price, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.price, {'attr': {
+                        'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                    }}) }}
+                    {{ form_errors(form.price, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.stock, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.stock, {'attr': {
+                        'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                    }}) }}
+                    {{ form_errors(form.stock, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                {# Description sur toute la largeur #}
+                <div class="col-span-2">
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.description, {'attr': {
+                        'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
+                        'rows': '5'
+                    }}) }}
+                    {{ form_errors(form.description, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                {# Image sur toute la largeur #}
+                <div class="col-span-2">
+                    {{ form_label(form.imageFile, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {% if product.imageName %}
+                        <div class="mt-2 mb-4">
+                            <img src="{{ vich_uploader_asset(product) }}" alt="{{ product.name }}" 
+                                 class="h-32 w-32 object-cover rounded-lg">
+                        </div>
+                    {% endif %}
+                    {{ form_widget(form.imageFile, {'attr': {
+                        'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                    }}) }}
+                    {{ form_errors(form.imageFile, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+            </div>
+
+            {# Boutons d'action #}
+            <div class="flex justify-between pt-6 border-t mt-8">
+                <a href="{{ path('app_product_show', {'id': product.id}) }}" 
+                   class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors">
+                    Retour
+                </a>
+                <button type="submit" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

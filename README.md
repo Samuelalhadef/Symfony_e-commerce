@@ -99,12 +99,12 @@ my-shop/
 - Formulaires intuitifs
 
 ## 📫 Contact
-- Portfolio: [votre-portfolio.com]
-- LinkedIn: [votre-linkedin]
-- Email: [votre-email]
+
+- LinkedIn: [https://www.linkedin.com/in/samuel-alhadef-190951257/]
+- Email: [samuel.alhadef@gmail.com]
 
 ---
 <div align="center">
   
-Fait avec ❤️ par [Samuel Alhadef](https://github.com/votre-username/)
+Fait avec ❤️ par [Samuel Alhadef](https://github.com/Samuelalhadef)
 </div>

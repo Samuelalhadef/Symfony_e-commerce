@@ -1,5 +1,6 @@
+![png (7)](https://github.com/user-attachments/assets/2c8e8e2c-8fbb-48db-9a0b-a9dbb51521e7)
 <div align="center">
-  ![png (7)](https://github.com/user-attachments/assets/2c8e8e2c-8fbb-48db-9a0b-a9dbb51521e7)
+  
 # 🛒 E-commerce Symfony Shop
 Une application e-commerce moderne et sécurisée développée avec Symfony 6, offrant une expérience d'achat multilingue et intuitive.
 </div>
